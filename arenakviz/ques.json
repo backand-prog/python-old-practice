@@ -1,0 +1,16 @@
+{
+	"ques":[
+	"Marci meleg vagy biszex?",
+	"Melyik hírességgel szexelt Barbi?",
+	"Hány boxert hozott Bendi három napra Almádiba?"
+	],
+	
+	"options":[
+	["Meleg", "Igen", "Biszex", "Egyik sem, mert hetero"],
+	["Johhny Depp", "Orlando Bloom", "Jason Momoa", "Éden Máté"],
+	["Kb. ötöt, mint minden normális ember", "Hármat, nem gondolta túl, de annyira nem vész", "Egyet. Fúj. Fúj. FÚJ.", "Nyolcat, biztosra ment. Túl igényes."]
+	],
+	
+	"ans": [2, 4, 3]
+
+}

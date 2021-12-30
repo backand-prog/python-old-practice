@@ -1,0 +1,153 @@
+------
+először is kell egy json file (.json kiterjesztés):
+	--- kérdések
+	--- válaszok
+	--- hányadik válasz helyes
+	
+	{
+	"ques":[
+	"1. kérdés"
+	],
+	"options":[
+	"válasz1, válasz2, válasz3, válasz4"
+	],
+	"ans": [2],
+	}
+	
+------
+.py fájlba ezeket kell importálni:
+
+from tkinter import *
+from tkinter import messagebox as mb
+import json
+
+------
+a beállítások az ablakhoz:
+
+root = Tk()
+root.geometry("800x500")
+root.title("Quiz")
+
+ez kell a végére:
+root.mainloop()
+
+------
+a json file-t python listává konvertáljuk (ezt már a .py fájlban)
+
+	with open('file.json') as f:
+		obj = json.load(f)
+	q = (obj['ques'])
+	options = (obj['options'])
+	a = (obj['ans'])
+	
+------
+csinálni kell a címnek és a kérdéseknek labelöket
+ehhez kell egy class (Quiz), amiben létrehozunk minden kérdéshez egy címet (ugyanazt), plusz betöltjük az aktuális kérdést. 
+a qn (question number) a számláló, ezt majd később léptetjük a next gombbal
+
+class Quiz:
+	def __init__(self):
+			self.qn = 0
+			self.ques = self.question(self.qn)
+
+a funkció csak annyit csinál, hogy létrehoz két labelt - a címet és az aktuális kérdést - meg lehet adni az elhelyezkedést, betűtípust, stb
+
+	    def question(self, qn):
+			t = Label(root, text="Quiz in Python Programming", width=50, bg="blue", fg="white", font=("times", 20, "bold"))
+			t.place(x=0, y=2)
+			qn = Label(root, text=q[qn], width=60, font=("times", 16, "bold"), anchor="w")
+			qn.place(x=70, y=100)
+			return qn
+
+
+------
+következő lépésben meg kell csinálni a rádiógombokat. ehhez a következő kettőt kell a konstruktorhoz hozzáadni (__init__)
+
+        self.opt_selected = IntVar()
+        self.opts = self.radiobtns()
+
+a val az incrementer számláló, ezt a while loopban növeljük. a yp pedig az elhelyzkedése a gombnak, ezt is minden körben továbbvisszük.
+a végén a b-t küldjük vissza, amiben benne van a lista a rádiógombokról
+a btn.place-el lehet megadni az elhelyezkedését x, y tengelyen
+a b listában jön vissza minden info a rádiógombokról amiket az adott instanceben vannak
+az alábbi funkció csinál 4 rádiógombot
+
+
+    def radiobtns(self):
+        val = 0
+        b = []
+        yp = 150
+        while val < 4:
+            btn = Radiobutton(root, text=" ", variable=self.opt_selected, value= val + 1, font=("times", 14))
+            b.append(btn)
+            btn.place(x=100, y=yp)
+            val += 1
+            yp += 40
+        return b
+
+-----
+a következő lépésben megjelenítjük a válaszokat
+
+az __init__-be ez megy:
+
+	self.display_options(self.qn)
+
+a questions függvényben már lementettük a kérdések szövegét, ezt hívjuk be most a q(qn)-el - a qn a question number
+még a for loop előtt az opt_selected-et 0-ára állítjuk
+a for loop alatt végigmegyünk az options-ön, ezzel a question numberrel
+
+	def display_options(self, qn):
+        val = 0
+        self.opt_selected.set(0)
+        self.ques['text'] = q[qn]
+        for op in options[qn]:
+            self.opts[val]['text'] = op
+            val += 1
+
+
+-----
+létrehozzuk a tovább és a vége gombot
+
+__init__-be, ez hozza létre a gombokat.
+	
+	self.buttons()
+
+nbutton a next, a quitbutton pedig a quit
+
+    def buttons(self):
+        nbutton = Button(root, text="Next", width=10, bg="green", fg="white", font=("times", 16, "bold"))
+        nbutton.place(x=200, y=380)
+        quitbutton = Button(root, text="Quit", command=root.destroy, width=10, bg="red", fg="white", font=("times", 16, "bold"))
+        quitbutton.place(x=380, y=380)
+
+-----
+mi történjen, ha a next-re nyomunk:
+	nézze meg hogy jó-e a válasz, és léptesse a következő felületre
+	
+az __init__-be kerül a correct számláló
+
+	self.correct = 0
+
+először deklarálnk egy függvény, amiben megnézzük, hogy jó-e a válasz a checkans függvényben, ha jó, akkor True jön vissza
+
+	def checkans(self, qn)
+		if self.opt_select.get() == a[qn]
+		 return True
+
+a next_btn függvényben meghívjuk a checkanst, és ennek függvényében növeljük a pontszámot
+	
+a buttons függvényben meg kell hívni a függvényt: command=self.next_btn
+	nbutton = Button(root, text="Next", command=self.next_btn, width=10, bg="green", fg="white", font=("times", 16, "bold"))
+
+-----
+a végén ki kell írni az eredményt
+ehhez kicsit át kell alakítani a nxt_btn függvényt, bele kell rakni egy if-et
+
+		if self.qn == len(q)
+			self.display_result()
+		else:
+			self.display_options(self.qn)
+
+ez annyit csinál, hogyha a kérdések száma eléri a kérdéslista hosszát, kiírja az eredményt
+
+

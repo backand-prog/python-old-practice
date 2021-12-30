@@ -1,0 +1,3 @@
+import stonescissorspaper
+
+stonescissorspaper.game()
